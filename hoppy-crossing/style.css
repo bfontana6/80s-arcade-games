@@ -30,15 +30,15 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: rgba(0, 0, 0, 0.85);
-  gap: 20px;
+  background: rgba(0, 0, 0, 0.88);
+  gap: 14px;
   z-index: 10;
 }
 
 .screen.hidden { display: none; }
 
 .pixel-title {
-  font-size: 28px;
+  font-size: 26px;
   color: #ffe066;
   text-align: center;
   line-height: 1.6;
@@ -47,73 +47,77 @@ body {
 }
 
 .subtitle {
-  font-size: 10px;
+  font-size: 9px;
   color: #aef;
   text-align: center;
 }
 
 .instructions {
-  font-size: 9px;
+  font-size: 8px;
   color: #ccc;
   text-align: center;
   line-height: 2;
 }
 
-.instructions span {
-  color: #ffe066;
+.instructions span { color: #ffe066; }
+
+.mode-label {
+  font-size: 7px;
+  color: #888;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.mode-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 280px;
 }
 
 .pixel-btn {
   font-family: 'Press Start 2P', monospace;
-  font-size: 12px;
+  font-size: 10px;
   color: #000;
-  background: #ffe066;
   border: none;
-  padding: 12px 24px;
+  padding: 10px 6px 8px;
   cursor: pointer;
-  box-shadow: 4px 4px 0 #b85c00;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
   transition: transform 0.05s, box-shadow 0.05s;
 }
 
 .pixel-btn:active {
   transform: translate(4px, 4px);
-  box-shadow: none;
+  box-shadow: none !important;
 }
 
-.pixel-btn:hover {
-  background: #fff0a0;
+.animal-tag {
+  font-size: 7px;
+  display: block;
+  opacity: 0.8;
 }
 
-.mode-buttons {
-  display: flex;
-  gap: 16px;
-}
+.btn-vivian { background: #f48fb1; box-shadow: 4px 4px 0 #880e4f; }
+.btn-vivian:hover { background: #f8bbd0; }
 
-.btn-easy {
-  background: #69f0ae;
-  box-shadow: 4px 4px 0 #00695c;
-}
+.btn-olivia { background: #69f0ae; box-shadow: 4px 4px 0 #00695c; }
+.btn-olivia:hover { background: #b9fbe0; }
 
-.btn-easy:hover {
-  background: #b9fbe0;
-}
+.btn-mama { background: #ffe066; box-shadow: 4px 4px 0 #b85c00; }
+.btn-mama:hover { background: #fff0a0; }
 
-.btn-easy:active {
-  box-shadow: none;
-}
+.btn-dada { background: #80d8ff; box-shadow: 4px 4px 0 #01579b; }
+.btn-dada:hover { background: #b3ecff; }
 
 #finalScore {
-  font-size: 11px;
-  color: #aef;
-  text-align: center;
-  line-height: 2;
-}
-
-#levelTitle {
-  font-size: 22px;
-}
-
-#levelSubtitle {
   font-size: 10px;
   color: #aef;
+  text-align: center;
+  line-height: 2.2;
 }
+
+#levelTitle  { font-size: 22px; color: #ffe066; }
+#levelSubtitle { font-size: 9px; color: #aef; text-align: center; }

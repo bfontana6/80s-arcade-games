@@ -9,25 +9,34 @@
 <body>
   <div id="game-container">
     <canvas id="gameCanvas" width="480" height="560"></canvas>
+
     <div id="overlay" class="screen">
       <div class="pixel-title">HOPPY'S<br>CROSSING</div>
-      <div class="subtitle">Help Hoppy get home safely!</div>
+      <div class="subtitle">Help your animal get home!</div>
       <div class="instructions">
         <span>↑ ↓ ← →</span> or <span>WASD</span> to move
       </div>
-      <div class="mode-buttons">
-        <button id="easyBtn" class="pixel-btn btn-easy">EASY</button>
-        <button id="startBtn" class="pixel-btn">NORMAL</button>
+      <div class="mode-label">Choose your adventure:</div>
+      <div class="mode-grid">
+        <button id="btnVivian" class="pixel-btn btn-vivian">VIVIAN<span class="animal-tag">Bunny</span></button>
+        <button id="btnOlivia" class="pixel-btn btn-olivia">OLIVIA<span class="animal-tag">Chameleon</span></button>
+        <button id="btnMama"   class="pixel-btn btn-mama">MAMA<span class="animal-tag">Frog</span></button>
+        <button id="btnDada"   class="pixel-btn btn-dada">DADA<span class="animal-tag">Penguin</span></button>
       </div>
     </div>
+
     <div id="gameOverScreen" class="screen hidden">
       <div class="pixel-title">GAME<br>OVER</div>
       <div id="finalScore"></div>
-      <div class="mode-buttons">
-        <button id="easyRestartBtn" class="pixel-btn btn-easy">EASY</button>
-        <button id="restartBtn" class="pixel-btn">NORMAL</button>
+      <div class="mode-label">Play again:</div>
+      <div class="mode-grid">
+        <button id="goVivian" class="pixel-btn btn-vivian">VIVIAN<span class="animal-tag">Bunny</span></button>
+        <button id="goOlivia" class="pixel-btn btn-olivia">OLIVIA<span class="animal-tag">Chameleon</span></button>
+        <button id="goMama"   class="pixel-btn btn-mama">MAMA<span class="animal-tag">Frog</span></button>
+        <button id="goDada"   class="pixel-btn btn-dada">DADA<span class="animal-tag">Penguin</span></button>
       </div>
     </div>
+
     <div id="levelScreen" class="screen hidden">
       <div class="pixel-title" id="levelTitle"></div>
       <div id="levelSubtitle"></div>
