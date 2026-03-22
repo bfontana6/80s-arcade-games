@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giraffe Munch</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="gameCanvas" width="480" height="520"></canvas>
+
+    <div id="overlay" class="screen">
+      <div class="pixel-title">GIRAFFE<br>MUNCH</div>
+      <div class="subtitle">Eat all the leaves!</div>
+      <div class="instructions">
+        <span>↑ ↓ ← →</span> or <span>WASD</span> to move<br>
+        Avoid the <span>lions!</span>
+      </div>
+      <div class="mode-label">Choose your adventure:</div>
+      <div class="mode-grid">
+        <button id="btnVivian" class="pixel-btn btn-vivian">VIVIAN<span class="animal-tag">Easy</span></button>
+        <button id="btnOlivia" class="pixel-btn btn-olivia">OLIVIA<span class="animal-tag">Normal</span></button>
+        <button id="btnMama"   class="pixel-btn btn-mama">MAMA<span class="animal-tag">Fast</span></button>
+        <button id="btnDada"   class="pixel-btn btn-dada">DADA<span class="animal-tag">Hard</span></button>
+      </div>
+    </div>
+
+    <div id="gameOverScreen" class="screen hidden">
+      <div class="pixel-title">GAME<br>OVER</div>
+      <div id="finalScore"></div>
+      <div class="mode-label">Play again:</div>
+      <div class="mode-grid">
+        <button id="goVivian" class="pixel-btn btn-vivian">VIVIAN<span class="animal-tag">Easy</span></button>
+        <button id="goOlivia" class="pixel-btn btn-olivia">OLIVIA<span class="animal-tag">Normal</span></button>
+        <button id="goMama"   class="pixel-btn btn-mama">MAMA<span class="animal-tag">Fast</span></button>
+        <button id="goDada"   class="pixel-btn btn-dada">DADA<span class="animal-tag">Hard</span></button>
+      </div>
+    </div>
+
+    <div id="winScreen" class="screen hidden">
+      <div class="pixel-title">YOU<br>WIN!</div>
+      <div id="winScore"></div>
+      <div class="mode-label">Play again:</div>
+      <div class="mode-grid">
+        <button id="winVivian" class="pixel-btn btn-vivian">VIVIAN<span class="animal-tag">Easy</span></button>
+        <button id="winOlivia" class="pixel-btn btn-olivia">OLIVIA<span class="animal-tag">Normal</span></button>
+        <button id="winMama"   class="pixel-btn btn-mama">MAMA<span class="animal-tag">Fast</span></button>
+        <button id="winDada"   class="pixel-btn btn-dada">DADA<span class="animal-tag">Hard</span></button>
+      </div>
+    </div>
+  </div>
+  <script src="game.js"></script>
+</body>
+</html>

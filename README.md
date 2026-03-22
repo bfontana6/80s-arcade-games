@@ -7,6 +7,7 @@ A collection of 8-bit style arcade games built with HTML5 Canvas and Vanilla JS.
 | Game | Description | Play |
 |------|-------------|------|
 | [Hoppy's Crossing](./hoppy-crossing/) | Frogger-style bunny crossing adventure | Open `hoppy-crossing/index.html` |
+| [Giraffe Munch](./giraffe-munch/) | Pac-Man style giraffe leaf-eating game | Open `giraffe-munch/index.html` |
 
 ## Running a Game
 

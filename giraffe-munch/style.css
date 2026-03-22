@@ -14,7 +14,7 @@ body {
 #game-container {
   position: relative;
   width: 480px;
-  height: 560px;
+  height: 520px;
   image-rendering: pixelated;
 }
 
@@ -30,7 +30,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: rgba(0, 0, 0, 0.88);
+  background: rgba(0, 0, 0, 0.90);
   gap: 14px;
   z-index: 10;
 }
@@ -112,12 +112,9 @@ body {
 .btn-dada { background: #80d8ff; box-shadow: 4px 4px 0 #01579b; }
 .btn-dada:hover { background: #b3ecff; }
 
-#finalScore {
+#finalScore, #winScore {
   font-size: 10px;
   color: #aef;
   text-align: center;
   line-height: 2.2;
 }
-
-#levelTitle  { font-size: 22px; color: #ffe066; }
-#levelSubtitle { font-size: 9px; color: #aef; text-align: center; }
