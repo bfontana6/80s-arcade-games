@@ -42,6 +42,7 @@ const PAL = {
 
 // ── Game state ────────────────────────────────────────────
 let state = 'title';
+let easyMode = false;
 let score = 0, lives = 3, level = 1, highScore = 0, invTimer = 0;
 let player = null, obstacles = [], logs = [], homeSlots = [];
 let animFrame = 0;
@@ -56,8 +57,10 @@ const finalScore     = document.getElementById('finalScore');
 const levelTitle     = document.getElementById('levelTitle');
 const levelSubtitle  = document.getElementById('levelSubtitle');
 
-document.getElementById('startBtn').addEventListener('click',   startGame);
-document.getElementById('restartBtn').addEventListener('click', startGame);
+document.getElementById('startBtn').addEventListener('click',        () => startGame(false));
+document.getElementById('easyBtn').addEventListener('click',         () => startGame(true));
+document.getElementById('restartBtn').addEventListener('click',      () => startGame(false));
+document.getElementById('easyRestartBtn').addEventListener('click',  () => startGame(true));
 
 document.addEventListener('keydown', e => {
   keys[e.key] = true;
@@ -337,6 +340,11 @@ function drawHUD() {
   ctx.fillText(`SCORE: ${score}`, 8, ROAD_END * TILE + TILE + 14);
   ctx.fillText(`HI: ${highScore}`, 8, ROAD_END * TILE + TILE + 30);
   ctx.fillText(`LVL: ${level}`, W - 100, ROAD_END * TILE + TILE + 14);
+  if (easyMode) {
+    ctx.fillStyle = '#69f0ae';
+    ctx.font = '8px "Press Start 2P", monospace';
+    ctx.fillText('EASY', W - 100, ROAD_END * TILE + TILE + 30);
+  }
 
   // Lives
   for (let i = 0; i < lives; i++) {
@@ -357,9 +365,30 @@ function drawMiniRabbit(x, y) {
 // ── Level config ──────────────────────────────────────────
 
 function getLevelConfig(lvl) {
+  if (easyMode) {
+    // Easy mode: slow speed, big gaps, long logs, turtles never dive
+    const speed = 0.4 + (lvl - 1) * 0.1;
+    return {
+      road: [
+        { row: 6,  dir:  1, speed: speed * 1.0, gap: 320, type: 'car',   color: '#e53935' },
+        { row: 7,  dir: -1, speed: speed * 1.1, gap: 300, type: 'car',   color: '#1e88e5' },
+        { row: 8,  dir:  1, speed: speed * 0.8, gap: 360, type: 'truck', color: '#fdd835' },
+        { row: 9,  dir: -1, speed: speed * 1.2, gap: 280, type: 'car',   color: '#8e24aa' },
+        { row: 10, dir:  1, speed: speed * 1.0, gap: 300, type: 'car',   color: '#00897b' },
+        { row: 11, dir: -1, speed: speed * 0.7, gap: 340, type: 'truck', color: '#f4511e' },
+      ],
+      water: [
+        { row: 1, dir: -1, speed: speed * 0.6, len: 4, gap: 60,  type: 'log' },
+        { row: 2, dir:  1, speed: speed * 0.7, len: 3, gap: 50,  type: 'turtle' }, // no diveInterval = never dives
+        { row: 3, dir: -1, speed: speed * 0.8, len: 4, gap: 70,  type: 'log' },
+        { row: 4, dir:  1, speed: speed * 0.5, len: 5, gap: 55,  type: 'log' },
+      ],
+    };
+  }
+
+  // Normal mode
   const speed = 0.8 + (lvl - 1) * 0.3;
   return {
-    // [row, dir, speed, gap, vehicleType, color]
     road: [
       { row: 6,  dir:  1, speed: speed * 1.0,  gap: 220, type: 'car',   color: '#e53935' },
       { row: 7,  dir: -1, speed: speed * 1.3,  gap: 180, type: 'car',   color: '#1e88e5' },
@@ -597,7 +626,7 @@ function update() {
         player.y      = START_ROW * TILE;
         player.alive  = true;
         player.riding = null;
-        invTimer      = 120;
+        invTimer      = easyMode ? 200 : 120;
       }
     }
   }
@@ -654,12 +683,13 @@ function draw() {
 
 // ── Game lifecycle ────────────────────────────────────────
 
-function startGame() {
+function startGame(easy = false) {
+  easyMode = easy;
   overlay.classList.add('hidden');
   gameOverScreen.classList.add('hidden');
   levelScreen.classList.add('hidden');
   score      = 0;
-  lives      = 3;
+  lives      = easyMode ? 5 : 3;
   level      = 1;
   invTimer   = 0;
   highScore  = highScore || 0;
@@ -679,9 +709,9 @@ function gameOver() {
 function showLevelScreen() {
   levelScreen.classList.remove('hidden');
   levelTitle.textContent   = `LEVEL ${level}`;
-  levelSubtitle.textContent = level <= 3 ? 'Faster traffic!' :
-                              level <= 6 ? 'Much faster...'  :
-                              'Maximum chaos!';
+  levelSubtitle.textContent = easyMode
+    ? (level <= 3 ? 'Great job! Keep going!' : level <= 6 ? 'You\'re amazing!' : 'Hoppy is so proud!')
+    : (level <= 3 ? 'Faster traffic!' : level <= 6 ? 'Much faster...' : 'Maximum chaos!');
   setTimeout(() => {
     levelScreen.classList.add('hidden');
     initLevel();

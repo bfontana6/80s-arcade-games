@@ -84,6 +84,24 @@ body {
   background: #fff0a0;
 }
 
+.mode-buttons {
+  display: flex;
+  gap: 16px;
+}
+
+.btn-easy {
+  background: #69f0ae;
+  box-shadow: 4px 4px 0 #00695c;
+}
+
+.btn-easy:hover {
+  background: #b9fbe0;
+}
+
+.btn-easy:active {
+  box-shadow: none;
+}
+
 #finalScore {
   font-size: 11px;
   color: #aef;

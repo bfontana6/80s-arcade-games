@@ -15,12 +15,18 @@
       <div class="instructions">
         <span>↑ ↓ ← →</span> or <span>WASD</span> to move
       </div>
-      <button id="startBtn" class="pixel-btn">PRESS START</button>
+      <div class="mode-buttons">
+        <button id="easyBtn" class="pixel-btn btn-easy">EASY</button>
+        <button id="startBtn" class="pixel-btn">NORMAL</button>
+      </div>
     </div>
     <div id="gameOverScreen" class="screen hidden">
       <div class="pixel-title">GAME<br>OVER</div>
       <div id="finalScore"></div>
-      <button id="restartBtn" class="pixel-btn">PLAY AGAIN</button>
+      <div class="mode-buttons">
+        <button id="easyRestartBtn" class="pixel-btn btn-easy">EASY</button>
+        <button id="restartBtn" class="pixel-btn">NORMAL</button>
+      </div>
     </div>
     <div id="levelScreen" class="screen hidden">
       <div class="pixel-title" id="levelTitle"></div>
