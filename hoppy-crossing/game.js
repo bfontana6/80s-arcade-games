@@ -1,6 +1,6 @@
 // ============================================================
 //  HOPPY'S CROSSING  –  8-bit animal arcade game
-//  Modes: Vivian (bunny) | Olivia (chameleon) | Mama (frog) | Dada (penguin)
+//  Modes: Vivian (bunny) | Olivia (chameleon) | Mama (sloth, jungle) | Dada (penguin, arctic)
 //  HTML5 Canvas + Web Audio API, no dependencies
 // ============================================================
 
@@ -30,6 +30,10 @@ const PAL = {
   water: '#1565c0', waterDark: '#0d47a1', waterFoam: '#90caf9',
   pad:   '#4caf50', padBorder: '#ffe066',
   text:  '#ffe066',
+  // Mama jungle
+  jungleFloor: '#163b18', jungleDark: '#0d2910',
+  junglePath:  '#3e2723', junglePathLine: '#6d4c41',
+  jungleRiver: '#1b5e20', jungleRiverDark: '#0a3d0a', jungleRiverFoam: '#a5d6a7',
   // Dada arctic
   snow:  '#dceefb', snowDark: '#b0d4f1',
   tundra:'#b0bec5', tundraLine:'#eceff1',
@@ -87,12 +91,12 @@ const MELODIES = {
            262,294,330,392, 330,294,262,0, 294,330,262,0, 0,0,0,0],
   olivia: [330,392,440,392, 330,0,294,330, 392,440,494,440, 392,330,0,0,
            262,330,392,440, 392,330,262,0, 330,294,262,0,   0,0,0,0],
-  mama:   [392,0,523,392, 440,392,349,0, 392,0,523,392, 330,0,0,0,
-           523,494,440,392, 349,330,294,0, 330,392,440,523, 494,0,0,0],
+  mama:   [392,440,392,0, 349,392,330,0, 294,330,349,0, 392,0,0,0,
+           440,494,440,0, 392,440,349,0, 330,349,392,0, 440,0,0,0],
   dada:   [220,262,220,0, 196,220,175,0, 196,262,220,0, 175,0,0,0,
            220,175,196,0, 220,262,294,0, 262,220,196,0, 175,0,0,0],
 };
-const MELODY_BPM = { vivian: 108, olivia: 148, mama: 168, dada: 126 };
+const MELODY_BPM = { vivian: 108, olivia: 148, mama: 138, dada: 126 };
 
 function startMusic() {
   stopMusic();
@@ -223,44 +227,58 @@ function drawChameleon(x, y, squished, inv) {
   ctx.restore();
 }
 
-// ── Sprite: Frog (Mama) ───────────────────────────────────
-function drawFrog(x, y, squished, inv) {
+// ── Sprite: Sloth (Mama) ──────────────────────────────────
+function drawSloth(x, y, squished, inv) {
   if (inv && Math.floor(Date.now() / 120) % 2 === 0) return;
   const s = TILE;
   ctx.save(); ctx.translate(x + s/2, y + s/2);
   if (squished) {
-    ctx.fillStyle = '#66bb6a';
-    ctx.fillRect(-s*0.46,-s*0.1,s*0.92,s*0.2);
+    ctx.fillStyle = '#bcaaa4';
+    ctx.fillRect(-s*0.44,-s*0.12,s*0.88,s*0.24);
     ctx.restore(); return;
   }
-  // Body (wide)
-  ctx.fillStyle = '#43a047';
-  ctx.fillRect(-s*0.34,-s*0.18,s*0.68,s*0.38);
-  ctx.fillRect(-s*0.3,-s*0.28,s*0.6,s*0.12); // forehead
-  // Belly
-  ctx.fillStyle = '#a5d6a7';
-  ctx.fillRect(-s*0.2,-s*0.1,s*0.4,s*0.24);
-  // Eyes (bulge on top)
-  ctx.fillStyle = '#43a047';
-  ctx.beginPath(); ctx.arc(-s*0.22,-s*0.3,s*0.11,0,Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.arc( s*0.22,-s*0.3,s*0.11,0,Math.PI*2); ctx.fill();
+  // Long arms reaching out (sloths hang/crawl with arms spread)
+  ctx.fillStyle = '#6d4c41';
+  ctx.fillRect(-s*0.48,-s*0.28,s*0.18,s*0.12); // left arm
+  ctx.fillRect( s*0.3, -s*0.28,s*0.18,s*0.12); // right arm
+  // Curved claws left
+  ctx.fillStyle = '#4e342e';
+  ctx.fillRect(-s*0.48,-s*0.3, s*0.06,s*0.16);
+  ctx.fillRect(-s*0.42,-s*0.3, s*0.06,s*0.18);
+  // Curved claws right
+  ctx.fillRect( s*0.36,-s*0.3, s*0.06,s*0.16);
+  ctx.fillRect( s*0.42,-s*0.3, s*0.06,s*0.18);
+  // Body (round, fluffy)
+  ctx.fillStyle = '#8d6e63';
+  ctx.fillRect(-s*0.3,-s*0.24,s*0.6,s*0.48);
+  // Lighter belly fur
+  ctx.fillStyle = '#bcaaa4';
+  ctx.fillRect(-s*0.2,-s*0.18,s*0.4,s*0.36);
+  // Dark mask on face
+  ctx.fillStyle = '#4e342e';
+  ctx.fillRect(-s*0.24,-s*0.44,s*0.48,s*0.24);
+  // Lighter face center
+  ctx.fillStyle = '#bcaaa4';
+  ctx.fillRect(-s*0.16,-s*0.42,s*0.32,s*0.2);
+  // Sleepy half-closed eyes
   ctx.fillStyle = '#212121';
-  ctx.beginPath(); ctx.arc(-s*0.22,-s*0.3,s*0.07,0,Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.arc( s*0.22,-s*0.3,s*0.07,0,Math.PI*2); ctx.fill();
+  ctx.fillRect(-s*0.14,-s*0.36,s*0.1,s*0.05); // left eye (half closed)
+  ctx.fillRect( s*0.04,-s*0.36,s*0.1,s*0.05); // right eye
   ctx.fillStyle = '#fff';
-  ctx.fillRect(-s*0.24,-s*0.33,s*0.04,s*0.04);
-  ctx.fillRect( s*0.2, -s*0.33,s*0.04,s*0.04);
-  // Mouth
-  ctx.fillStyle = '#2e7d32';
-  ctx.fillRect(-s*0.14,-s*0.13,s*0.28,s*0.04);
-  // Front legs
-  ctx.fillStyle = '#43a047';
-  ctx.fillRect(-s*0.46,-s*0.08,s*0.14,s*0.1);
-  ctx.fillRect( s*0.32,-s*0.08,s*0.14,s*0.1);
-  // Back legs
-  const hop = Math.floor(animFrame/5) % 2;
-  ctx.fillRect(-s*0.46, s*0.1+(hop?s*0.05:0), s*0.16,s*0.14);
-  ctx.fillRect( s*0.3,  s*0.1+(hop?0:s*0.05), s*0.16,s*0.14);
+  ctx.fillRect(-s*0.13,-s*0.38,s*0.04,s*0.03);
+  ctx.fillRect( s*0.05,-s*0.38,s*0.04,s*0.03);
+  // Small nose
+  ctx.fillStyle = '#5d4037';
+  ctx.fillRect(-s*0.04,-s*0.28,s*0.08,s*0.06);
+  // Lazy smile
+  ctx.fillStyle = '#4e342e';
+  ctx.fillRect(-s*0.1,-s*0.22,s*0.06,s*0.03);
+  ctx.fillRect( s*0.04,-s*0.22,s*0.06,s*0.03);
+  // Hind legs dangling
+  const sway = Math.floor(animFrame / 20) % 2;
+  ctx.fillStyle = '#6d4c41';
+  ctx.fillRect(-s*0.22, s*0.22+(sway?s*0.04:0), s*0.14,s*0.18);
+  ctx.fillRect( s*0.08, s*0.22+(sway?0:s*0.04), s*0.14,s*0.18);
   ctx.restore();
 }
 
@@ -312,7 +330,7 @@ function drawPenguin(x, y, squished, inv) {
 function drawPlayer(x, y, squished = false, inv = false) {
   if (gameMode === 'vivian') return drawBunny(x, y, squished, inv);
   if (gameMode === 'olivia') return drawChameleon(x, y, squished, inv);
-  if (gameMode === 'mama')   return drawFrog(x, y, squished, inv);
+  if (gameMode === 'mama')   return drawSloth(x, y, squished, inv);
   if (gameMode === 'dada')   return drawPenguin(x, y, squished, inv);
 }
 
@@ -501,6 +519,195 @@ function drawDadaObstacle(x, y, type, dir) {
   if (type === 'walrus')  return drawWalrus(x, y, dir);
 }
 
+// ── Jungle obstacle sprites (Mama mode) ──────────────────
+function drawJaguar(x, y, dir) {
+  const s = TILE;
+  ctx.save(); ctx.translate(x + s/2, y + s/2);
+  if (dir < 0) ctx.scale(-1, 1);
+  // Body (low, sleek)
+  ctx.fillStyle = '#f9a825';
+  ctx.fillRect(-s*0.44,-s*0.18,s*0.78,s*0.36);
+  // Head
+  ctx.fillStyle = '#fbc02d';
+  ctx.fillRect( s*0.28,-s*0.24,s*0.26,s*0.3);
+  // Black spots on body
+  ctx.fillStyle = '#212121';
+  ctx.fillRect(-s*0.3,-s*0.14,s*0.1,s*0.1);
+  ctx.fillRect(-s*0.1,-s*0.06,s*0.1,s*0.1);
+  ctx.fillRect( s*0.08,-s*0.14,s*0.1,s*0.1);
+  ctx.fillRect( s*0.18, s*0.0, s*0.1,s*0.1);
+  // White muzzle
+  ctx.fillStyle = '#fff8e1';
+  ctx.fillRect( s*0.34,-s*0.14,s*0.16,s*0.14);
+  // Eye (fierce)
+  ctx.fillStyle = '#212121'; ctx.fillRect(s*0.32,-s*0.2,s*0.07,s*0.07);
+  ctx.fillStyle = '#ffee58'; ctx.fillRect(s*0.33,-s*0.2,s*0.04,s*0.04);
+  // Ear
+  ctx.fillStyle = '#f9a825';
+  ctx.fillRect(s*0.34,-s*0.3,s*0.08,s*0.1);
+  // Tail curving up
+  ctx.fillRect(-s*0.48,-s*0.12,s*0.1,s*0.22);
+  ctx.fillRect(-s*0.44,-s*0.3, s*0.08,s*0.2);
+  // Legs
+  ctx.fillStyle = '#f9a825';
+  ctx.fillRect(-s*0.3, s*0.16,s*0.12,s*0.12);
+  ctx.fillRect( s*0.1, s*0.16,s*0.12,s*0.12);
+  ctx.restore();
+}
+
+function drawGorilla(x, y, dir) {
+  // 2-tile wide
+  const s = TILE;
+  ctx.save(); ctx.translate(x + s, y + s/2);
+  if (dir < 0) ctx.scale(-1, 1);
+  // Huge body
+  ctx.fillStyle = '#212121';
+  ctx.fillRect(-s*0.78,-s*0.36,s*1.3,s*0.62);
+  // Silver/grey back
+  ctx.fillStyle = '#616161';
+  ctx.fillRect(-s*0.22,-s*0.34,s*0.44,s*0.22);
+  // Head
+  ctx.fillStyle = '#212121';
+  ctx.fillRect(-s*0.28,-s*0.48,s*0.56,s*0.28);
+  // Brow ridge
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fillRect(-s*0.26,-s*0.52,s*0.52,s*0.1);
+  // Face
+  ctx.fillStyle = '#424242';
+  ctx.fillRect(-s*0.2,-s*0.44,s*0.4,s*0.22);
+  // Eyes
+  ctx.fillStyle = '#212121';
+  ctx.fillRect(-s*0.18,-s*0.44,s*0.08,s*0.08);
+  ctx.fillRect( s*0.1, -s*0.44,s*0.08,s*0.08);
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(-s*0.17,-s*0.44,s*0.03,s*0.03);
+  ctx.fillRect( s*0.11,-s*0.44,s*0.03,s*0.03);
+  // Nostrils
+  ctx.fillStyle = '#111';
+  ctx.fillRect(-s*0.08,-s*0.3,s*0.06,s*0.06);
+  ctx.fillRect( s*0.02,-s*0.3,s*0.06,s*0.06);
+  // Knuckle arms
+  ctx.fillStyle = '#212121';
+  ctx.fillRect(-s*0.82,-s*0.1,s*0.16,s*0.28);
+  ctx.fillRect( s*0.52,-s*0.1,s*0.3, s*0.28);
+  // Legs
+  ctx.fillRect(-s*0.5, s*0.24,s*0.22,s*0.18);
+  ctx.fillRect( s*0.06,s*0.24,s*0.22,s*0.18);
+  ctx.restore();
+}
+
+function drawTapir(x, y, dir) {
+  const s = TILE;
+  ctx.save(); ctx.translate(x + s/2, y + s/2);
+  if (dir < 0) ctx.scale(-1, 1);
+  // Round body
+  ctx.fillStyle = '#5d4037';
+  ctx.fillRect(-s*0.44,-s*0.22,s*0.76,s*0.44);
+  // Head + distinctive long snout
+  ctx.fillStyle = '#6d4c41';
+  ctx.fillRect( s*0.24,-s*0.24,s*0.24,s*0.28);
+  // Long flexible snout/proboscis
+  ctx.fillStyle = '#5d4037';
+  ctx.fillRect( s*0.44,-s*0.18,s*0.18,s*0.12);
+  ctx.fillRect( s*0.54,-s*0.26,s*0.1, s*0.1);
+  // White/cream saddle marking
+  ctx.fillStyle = '#d7ccc8';
+  ctx.fillRect(-s*0.08,-s*0.22,s*0.28,s*0.1);
+  // Eye
+  ctx.fillStyle = '#212121'; ctx.fillRect(s*0.28,-s*0.18,s*0.07,s*0.07);
+  ctx.fillStyle = '#fff'; ctx.fillRect(s*0.29,-s*0.18,s*0.03,s*0.03);
+  // Small ear
+  ctx.fillStyle = '#6d4c41';
+  ctx.fillRect(s*0.3,-s*0.3,s*0.08,s*0.1);
+  // Legs
+  ctx.fillStyle = '#4e342e';
+  ctx.fillRect(-s*0.36, s*0.2,s*0.14,s*0.14);
+  ctx.fillRect( s*0.06, s*0.2,s*0.14,s*0.14);
+  ctx.restore();
+}
+
+function drawToucan(x, y, dir) {
+  const s = TILE;
+  ctx.save(); ctx.translate(x + s/2, y + s/2);
+  if (dir < 0) ctx.scale(-1, 1);
+  // Black body
+  ctx.fillStyle = '#212121';
+  ctx.fillRect(-s*0.26,-s*0.28,s*0.52,s*0.46);
+  // White throat patch
+  ctx.fillStyle = '#f5f5f5';
+  ctx.fillRect(-s*0.16,-s*0.2,s*0.3,s*0.24);
+  // Yellow breast
+  ctx.fillStyle = '#ffeb3b';
+  ctx.fillRect(-s*0.14,-s*0.1,s*0.26,s*0.14);
+  // Red tail
+  ctx.fillStyle = '#e53935';
+  ctx.fillRect(-s*0.28,-s*0.06,s*0.1,s*0.26);
+  // Huge colorful beak
+  ctx.fillStyle = '#f9a825';
+  ctx.fillRect( s*0.24,-s*0.16,s*0.28,s*0.12); // top beak
+  ctx.fillStyle = '#43a047';
+  ctx.fillRect( s*0.24,-s*0.08,s*0.24,s*0.1);  // bottom beak
+  ctx.fillStyle = '#e53935';
+  ctx.fillRect( s*0.24,-s*0.12,s*0.06,s*0.04); // beak stripe
+  // Eye (bright)
+  ctx.fillStyle = '#212121';
+  ctx.beginPath(); ctx.arc(s*0.14,-s*0.16,s*0.08,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#ffeb3b';
+  ctx.beginPath(); ctx.arc(s*0.14,-s*0.16,s*0.05,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#000';
+  ctx.beginPath(); ctx.arc(s*0.15,-s*0.16,s*0.03,0,Math.PI*2); ctx.fill();
+  // Feet gripping branch
+  ctx.fillStyle = '#5d4037';
+  ctx.fillRect(-s*0.18, s*0.18,s*0.12,s*0.06);
+  ctx.fillRect( s*0.06, s*0.18,s*0.12,s*0.06);
+  ctx.restore();
+}
+
+function drawAnaconda(x, y, dir) {
+  // 2-tile wide snake
+  const s = TILE;
+  ctx.save(); ctx.translate(x + s, y + s/2);
+  if (dir < 0) ctx.scale(-1, 1);
+  // Thick sinuous body (dark green with pattern)
+  ctx.fillStyle = '#2e7d32';
+  ctx.fillRect(-s*0.88,-s*0.2, s*1.76,s*0.4);
+  // Scale pattern (yellow-green diamonds)
+  ctx.fillStyle = '#558b2f';
+  for (let i = -0.7; i < 0.8; i += 0.22) {
+    ctx.fillRect(s*i-s*0.06, -s*0.12, s*0.12, s*0.24);
+  }
+  // Dark dorsal stripe
+  ctx.fillStyle = '#1b5e20';
+  ctx.fillRect(-s*0.88,-s*0.06,s*1.76,s*0.12);
+  // Yellow belly
+  ctx.fillStyle = '#c5e1a5';
+  ctx.fillRect(-s*0.82,-s*0.1,s*1.64,s*0.08);
+  // Head (larger, triangular)
+  ctx.fillStyle = '#388e3c';
+  ctx.fillRect( s*0.62,-s*0.28,s*0.32,s*0.36);
+  ctx.fillRect( s*0.7, -s*0.32,s*0.2, s*0.1);
+  // Forked tongue
+  ctx.fillStyle = '#e53935';
+  ctx.fillRect( s*0.9,-s*0.1, s*0.14,s*0.04);
+  ctx.fillRect( s*1.0,-s*0.14,s*0.06,s*0.06);
+  ctx.fillRect( s*1.0,-s*0.06,s*0.06,s*0.06);
+  // Eye
+  ctx.fillStyle = '#ffee58'; ctx.fillRect(s*0.68,-s*0.2,s*0.08,s*0.08);
+  ctx.fillStyle = '#000';    ctx.fillRect(s*0.7,-s*0.2, s*0.04,s*0.04);
+  // Tail tip
+  ctx.fillStyle = '#2e7d32';
+  ctx.fillRect(-s*0.88,-s*0.14,s*0.12,s*0.28);
+  ctx.restore();
+}
+
+function drawJungleObstacle(x, y, type, dir) {
+  if (type === 'jaguar')   return drawJaguar(x, y, dir);
+  if (type === 'gorilla')  return drawGorilla(x, y, dir);
+  if (type === 'tapir')    return drawTapir(x, y, dir);
+  if (type === 'toucan')   return drawToucan(x, y, dir);
+  if (type === 'anaconda') return drawAnaconda(x, y, dir);
+}
+
 // ── Platform sprites ──────────────────────────────────────
 function drawLog(x, y, w) {
   ctx.save();
@@ -555,9 +762,37 @@ function drawIceFloe(x, y, w) {
   ctx.restore();
 }
 
+function drawLilyPad(x, y, w) {
+  ctx.save();
+  const pads = Math.max(1, Math.round(w / TILE));
+  for (let i = 0; i < pads; i++) {
+    const cx = x + i * TILE + TILE / 2;
+    const cy = y + TILE / 2;
+    const r  = TILE * 0.42;
+    // Main pad
+    ctx.fillStyle = '#2e7d32';
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
+    // Lighter highlight
+    ctx.fillStyle = '#43a047';
+    ctx.beginPath(); ctx.arc(cx - TILE*0.06, cy - TILE*0.08, r * 0.62, 0, Math.PI * 2); ctx.fill();
+    // Pad veins
+    ctx.strokeStyle = '#1b5e20'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx, cy - r * 0.9); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx - r*0.7, cy - r*0.5); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + r*0.7, cy - r*0.5); ctx.stroke();
+    // Flower
+    ctx.fillStyle = '#fff9c4';
+    ctx.beginPath(); ctx.arc(cx, cy, TILE * 0.1, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#ffee58';
+    ctx.beginPath(); ctx.arc(cx, cy, TILE * 0.06, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.restore();
+}
+
 // ── Background ────────────────────────────────────────────
 function drawBackground() {
-  const dada = (gameMode === 'dada');
+  const dada   = (gameMode === 'dada');
+  const jungle = (gameMode === 'mama');
   for (let row = 0; row < ROWS; row++) {
     const y = row * TILE;
     const isSafe  = row === SAFE_TOP || row === SAFE_MID || row >= ROAD_END + 1;
@@ -565,21 +800,31 @@ function drawBackground() {
     const isRoad  = row >= ROAD_START  && row <= ROAD_END;
 
     if (isSafe) {
-      ctx.fillStyle = dada ? PAL.snow : PAL.grass;
+      ctx.fillStyle = dada ? PAL.snow : jungle ? PAL.jungleFloor : PAL.grass;
       ctx.fillRect(0, y, W, TILE);
-      dada ? drawSnowTexture(y) : drawGrassTexture(y);
+      if (dada)   drawSnowTexture(y);
+      else if (jungle) drawJungleTexture(y);
+      else        drawGrassTexture(y);
     } else if (isWater) {
       const wave = Math.floor(animFrame / 8) % 2;
-      ctx.fillStyle = dada ? (row % 2 ? PAL.arctic : PAL.arcticDark) : (row % 2 ? PAL.water : PAL.waterDark);
+      ctx.fillStyle = dada   ? (row % 2 ? PAL.arctic      : PAL.arcticDark)
+                   : jungle  ? (row % 2 ? PAL.jungleRiver : PAL.jungleRiverDark)
+                   :           (row % 2 ? PAL.water       : PAL.waterDark);
       ctx.fillRect(0, y, W, TILE);
-      ctx.fillStyle = dada ? PAL.arcticFoam : PAL.waterFoam;
-      ctx.globalAlpha = 0.3;
+      ctx.fillStyle = dada ? PAL.arcticFoam : jungle ? PAL.jungleRiverFoam : PAL.waterFoam;
+      ctx.globalAlpha = 0.25;
       for (let fx = wave * 20; fx < W; fx += 40) ctx.fillRect(fx, y+TILE*0.45, 18, 3);
       ctx.globalAlpha = 1;
     } else if (isRoad) {
-      ctx.fillStyle = dada ? PAL.tundra : PAL.road;
+      ctx.fillStyle = dada ? PAL.tundra : jungle ? PAL.junglePath : PAL.road;
       ctx.fillRect(0, y, W, TILE);
-      if (row % 2 === 1) {
+      if (jungle) {
+        // Jungle path: roots and dirt texture
+        ctx.fillStyle = PAL.junglePathLine;
+        ctx.globalAlpha = 0.4;
+        for (let dx = 0; dx < W; dx += 28) ctx.fillRect(dx, y + 4, 6, TILE - 8);
+        ctx.globalAlpha = 1;
+      } else if (row % 2 === 1) {
         ctx.fillStyle = dada ? PAL.tundraLine : PAL.roadLine;
         ctx.globalAlpha = 0.35;
         for (let dx = 0; dx < W; dx += 30) ctx.fillRect(dx, y+TILE/2-2, 16, 4);
@@ -601,6 +846,16 @@ function drawSnowTexture(y) {
   for (let tx = 14; tx < W; tx += 26) ctx.fillRect(tx, y+22, 2, 2);
 }
 
+function drawJungleTexture(y) {
+  // Dense leaf shapes
+  ctx.fillStyle = PAL.jungleDark;
+  for (let tx = 2; tx < W; tx += 20) ctx.fillRect(tx, y + 4, 10, 4);
+  ctx.fillStyle = '#1e5220';
+  for (let tx = 10; tx < W; tx += 24) ctx.fillRect(tx, y + 14, 4, 10);
+  ctx.fillStyle = '#2d6a2d';
+  for (let tx = 6; tx < W; tx += 30) ctx.fillRect(tx, y + 26, 8, 4);
+}
+
 function drawHomePads() {
   const dada = (gameMode === 'dada');
   const slotW = Math.floor(W / 5);
@@ -617,13 +872,27 @@ function drawHomePads() {
         ctx.fillStyle = '#212121'; ctx.fillRect(px+11,py+8,18,22);
         ctx.fillStyle = '#f5f5f5'; ctx.fillRect(px+14,py+11,12,14);
       }
+    } else if (gameMode === 'mama') {
+      // Jungle tree hollow
+      ctx.fillStyle = filled ? '#5d4037' : '#3e2723';
+      ctx.fillRect(px, py+2, TILE, TILE-4);
+      ctx.fillStyle = filled ? '#795548' : '#4e342e';
+      ctx.fillRect(px+4, py+6, TILE-8, TILE-12);
+      // Dark hollow inside
+      ctx.fillStyle = filled ? '#4e342e' : '#1a0a00';
+      ctx.beginPath(); ctx.ellipse(px+TILE/2, py+TILE/2, TILE*0.3, TILE*0.32, 0, 0, Math.PI*2); ctx.fill();
+      if (filled) {
+        // Mini sloth in hollow
+        ctx.fillStyle = '#8d6e63'; ctx.fillRect(px+12, py+10, 16, 18);
+        ctx.fillStyle = '#bcaaa4'; ctx.fillRect(px+15, py+12, 10, 12);
+      }
     } else {
       ctx.fillStyle = filled ? PAL.pad : '#1b5e20';
       ctx.fillRect(px, py+4, TILE, TILE-8);
       ctx.strokeStyle = PAL.padBorder; ctx.lineWidth = 2;
       ctx.strokeRect(px, py+4, TILE, TILE-8);
       if (filled) {
-        ctx.fillStyle = gameMode === 'mama' ? '#43a047' : gameMode === 'olivia' ? '#4caf50' : '#f8f8f8';
+        ctx.fillStyle = gameMode === 'olivia' ? '#4caf50' : '#f8f8f8';
         ctx.fillRect(px+12, py+10, 16, 20);
         ctx.fillRect(px+14, py+6,   6, 10);
         ctx.fillRect(px+20, py+6,   6, 10);
@@ -640,7 +909,7 @@ function drawHUD() {
   ctx.fillText(`HI: ${highScore}`, 8,       hudY + 30);
   ctx.fillText(`LVL: ${level}`,    W - 100, hudY + 14);
   // Mode badge
-  const badgeCol = { vivian:'#f48fb1', olivia:'#69f0ae', mama:'#ffe066', dada:'#80d8ff' };
+  const badgeCol = { vivian:'#f48fb1', olivia:'#69f0ae', mama:'#a5d6a7', dada:'#80d8ff' };
   ctx.fillStyle = badgeCol[gameMode];
   ctx.font = '8px "Press Start 2P", monospace';
   ctx.fillText(gameMode.toUpperCase(), W - 100, hudY + 30);
@@ -653,8 +922,9 @@ function drawMiniPlayer(x, y) {
     ctx.fillStyle = '#212121'; ctx.fillRect(x+4, y, 12, 16);
     ctx.fillStyle = '#f5f5f5'; ctx.fillRect(x+6, y+3, 8, 9);
   } else if (gameMode === 'mama') {
-    ctx.fillStyle = '#43a047'; ctx.fillRect(x+2, y+2, 16, 14);
-    ctx.fillStyle = '#a5d6a7'; ctx.fillRect(x+5, y+5, 10, 8);
+    // Mini sloth: brown body + lighter belly
+    ctx.fillStyle = '#8d6e63'; ctx.fillRect(x+3, y+1, 14, 16);
+    ctx.fillStyle = '#bcaaa4'; ctx.fillRect(x+6, y+4, 8, 10);
   } else if (gameMode === 'olivia') {
     ctx.fillStyle = '#4caf50'; ctx.fillRect(x+2, y+4, 16, 10);
     ctx.fillStyle = '#2e7d32'; ctx.fillRect(x+14,y+2,  6,  6);
@@ -709,21 +979,22 @@ function getLevelConfig(lvl) {
       };
     }
     case 'mama': {
+      // Jungle theme: animals on dirt paths, lily pads on river
       const s = 0.8 + (lvl - 1) * 0.3;
       return {
         road: [
-          { row:6,  dir: 1, speed:s*1.0, gap:220, type:'car',   color:'#e53935' },
-          { row:7,  dir:-1, speed:s*1.3, gap:180, type:'car',   color:'#1e88e5' },
-          { row:8,  dir: 1, speed:s*0.9, gap:260, type:'truck', color:'#fdd835' },
-          { row:9,  dir:-1, speed:s*1.5, gap:160, type:'car',   color:'#8e24aa' },
-          { row:10, dir: 1, speed:s*1.2, gap:190, type:'car',   color:'#00897b' },
-          { row:11, dir:-1, speed:s*0.8, gap:240, type:'truck', color:'#f4511e' },
+          { row:6,  dir: 1, speed:s*1.2, gap:200, type:'toucan',   color:'#212121' },
+          { row:7,  dir:-1, speed:s*1.4, gap:170, type:'jaguar',   color:'#f9a825' },
+          { row:8,  dir: 1, speed:s*0.7, gap:240, type:'gorilla',  color:'#212121' },
+          { row:9,  dir:-1, speed:s*1.5, gap:150, type:'tapir',    color:'#5d4037' },
+          { row:10, dir: 1, speed:s*1.1, gap:190, type:'jaguar',   color:'#f9a825' },
+          { row:11, dir:-1, speed:s*0.6, gap:220, type:'anaconda', color:'#2e7d32' },
         ],
         water: [
-          { row:1, dir:-1, speed:s*0.7, len:3, gap:100, type:'log' },
-          { row:2, dir: 1, speed:s*0.9, len:2, gap:80,  type:'turtle', diveInterval:240 },
-          { row:3, dir:-1, speed:s*1.1, len:3, gap:120, type:'log' },
-          { row:4, dir: 1, speed:s*0.6, len:4, gap:90,  type:'log' },
+          { row:1, dir:-1, speed:s*0.7, len:3, gap:95,  type:'log' },
+          { row:2, dir: 1, speed:s*0.8, len:2, gap:80,  type:'lily' },
+          { row:3, dir:-1, speed:s*1.0, len:3, gap:110, type:'log' },
+          { row:4, dir: 1, speed:s*0.6, len:4, gap:85,  type:'lily' },
         ],
       };
     }
@@ -755,8 +1026,10 @@ function spawnLane(cfg) {
   let x = -(Math.random() * cfg.gap);
   while (x < W + 200) {
     const w = cfg.len ? cfg.len * TILE
-            : cfg.type === 'truck' ? TILE * 2
-            : cfg.type === 'orca'  ? TILE * 2
+            : cfg.type === 'truck'    ? TILE * 2
+            : cfg.type === 'orca'     ? TILE * 2
+            : cfg.type === 'gorilla'  ? TILE * 2
+            : cfg.type === 'anaconda' ? TILE * 2
             : TILE;
     lane.objects.push({ x: cfg.dir > 0 ? x - w : W - x, w, diveTimer: 0, diving: false });
     x += w + cfg.gap + Math.random() * 40;
@@ -924,16 +1197,18 @@ function draw() {
   for (const lane of logs) {
     for (const obj of lane.objects) {
       const y = lane.row * TILE;
-      if (lane.type === 'log')    drawLog(obj.x, y, obj.w);
+      if      (lane.type === 'log')    drawLog(obj.x, y, obj.w);
       else if (lane.type === 'turtle') drawTurtle(obj.x, y, obj.diving);
       else if (lane.type === 'ice')    drawIceFloe(obj.x, y, obj.w);
+      else if (lane.type === 'lily')   drawLilyPad(obj.x, y, obj.w);
     }
   }
 
   for (const lane of obstacles) {
     for (const obj of lane.objects) {
       const y = lane.row * TILE;
-      if (gameMode === 'dada') drawDadaObstacle(obj.x, y, lane.type, lane.dir);
+      if      (gameMode === 'dada') drawDadaObstacle(obj.x, y, lane.type, lane.dir);
+      else if (gameMode === 'mama') drawJungleObstacle(obj.x, y, lane.type, lane.dir);
       else if (lane.type === 'truck') drawTruck(obj.x, y, lane.color, lane.dir);
       else drawCar(obj.x, y, lane.color, lane.dir);
     }
