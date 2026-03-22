@@ -41,8 +41,9 @@ const PAL = {
 };
 
 // ── Game state ────────────────────────────────────────────
-let state, score, lives, level, highScore, flashTimer, invTimer;
-let player, obstacles, logs, homeSlots;
+let state = 'title';
+let score = 0, lives = 3, level = 1, highScore = 0, invTimer = 0;
+let player = null, obstacles = [], logs = [], homeSlots = [];
 let animFrame = 0;
 let gameRunning = false;
 let keys = {};
@@ -607,6 +608,9 @@ function update() {
 function draw() {
   ctx.clearRect(0, 0, W, H);
   drawBackground();
+
+  if (state === 'title') return; // nothing else to draw until game starts
+
   drawHomePads();
 
   // Draw logs
@@ -634,10 +638,12 @@ function draw() {
   }
 
   // Draw player
-  if (player.deathAnim > 0) {
-    drawBunny(player.x, player.y, true);
-  } else if (player.alive) {
-    drawBunny(player.x, player.y, false, invTimer > 0);
+  if (player) {
+    if (player.deathAnim > 0) {
+      drawBunny(player.x, player.y, true);
+    } else if (player.alive) {
+      drawBunny(player.x, player.y, false, invTimer > 0);
+    }
   }
 
   drawHUD();
@@ -699,5 +705,4 @@ function loop() {
 }
 
 // Boot
-highScore = 0;
 loop();
