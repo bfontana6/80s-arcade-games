@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hoppy's Crossing</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="gameCanvas" width="480" height="560"></canvas>
+    <div id="overlay" class="screen">
+      <div class="pixel-title">HOPPY'S<br>CROSSING</div>
+      <div class="subtitle">Help Hoppy get home safely!</div>
+      <div class="instructions">
+        <span>↑ ↓ ← →</span> or <span>WASD</span> to move
+      </div>
+      <button id="startBtn" class="pixel-btn">PRESS START</button>
+    </div>
+    <div id="gameOverScreen" class="screen hidden">
+      <div class="pixel-title">GAME<br>OVER</div>
+      <div id="finalScore"></div>
+      <button id="restartBtn" class="pixel-btn">PLAY AGAIN</button>
+    </div>
+    <div id="levelScreen" class="screen hidden">
+      <div class="pixel-title" id="levelTitle"></div>
+      <div id="levelSubtitle"></div>
+    </div>
+  </div>
+  <script src="game.js"></script>
+</body>
+</html>

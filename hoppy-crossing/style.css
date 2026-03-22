@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Press Start 2P', monospace;
+}
+
+#game-container {
+  position: relative;
+  width: 480px;
+  height: 560px;
+  image-rendering: pixelated;
+}
+
+#gameCanvas {
+  display: block;
+  image-rendering: pixelated;
+}
+
+.screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.85);
+  gap: 20px;
+  z-index: 10;
+}
+
+.screen.hidden { display: none; }
+
+.pixel-title {
+  font-size: 28px;
+  color: #ffe066;
+  text-align: center;
+  line-height: 1.6;
+  text-shadow: 3px 3px #b85c00, -1px -1px #ff9900;
+  letter-spacing: 2px;
+}
+
+.subtitle {
+  font-size: 10px;
+  color: #aef;
+  text-align: center;
+}
+
+.instructions {
+  font-size: 9px;
+  color: #ccc;
+  text-align: center;
+  line-height: 2;
+}
+
+.instructions span {
+  color: #ffe066;
+}
+
+.pixel-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  color: #000;
+  background: #ffe066;
+  border: none;
+  padding: 12px 24px;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 #b85c00;
+  transition: transform 0.05s, box-shadow 0.05s;
+}
+
+.pixel-btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+.pixel-btn:hover {
+  background: #fff0a0;
+}
+
+#finalScore {
+  font-size: 11px;
+  color: #aef;
+  text-align: center;
+  line-height: 2;
+}
+
+#levelTitle {
+  font-size: 22px;
+}
+
+#levelSubtitle {
+  font-size: 10px;
+  color: #aef;
+}
