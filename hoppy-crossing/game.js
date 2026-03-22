@@ -492,12 +492,13 @@ function checkState() {
     player.riding = null;
   }
 
-  // Road zone – check car/truck hit
+  // Road zone – check car/truck hit (inset hitbox 6px each side to match sprites)
   if (row >= ROAD_START && row <= ROAD_END) {
+    const inset = 6;
     for (const lane of obstacles) {
       if (lane.row !== row) continue;
       for (const obj of lane.objects) {
-        if (px + pw > obj.x && px < obj.x + obj.w) {
+        if (px + pw > obj.x + inset && px < obj.x + obj.w - inset) {
           killPlayer(); return;
         }
       }
@@ -507,6 +508,7 @@ function checkState() {
 
 function killPlayer() {
   if (!player.alive) return;
+  if (invTimer > 0) return;   // invincibility frames are real, not just visual
   player.alive     = false;
   player.deathAnim = 30;
   lives--;
@@ -558,14 +560,15 @@ function update() {
     // Check continuous collision on road (riding is water only, skip)
   }
 
-  // Continuous road collision while moving
-  if (player.alive && player.row >= ROAD_START && player.row <= ROAD_END) {
+  // Continuous road collision (inset 6px each side to match sprites)
+  if (player.alive && invTimer === 0 && player.row >= ROAD_START && player.row <= ROAD_END) {
     const px = player.x + TILE * 0.25;
     const pw = TILE * 0.5;
+    const inset = 6;
     for (const lane of obstacles) {
       if (lane.row !== player.row) continue;
       for (const obj of lane.objects) {
-        if (px + pw > obj.x && px < obj.x + obj.w) {
+        if (px + pw > obj.x + inset && px < obj.x + obj.w - inset) {
           killPlayer();
         }
       }
